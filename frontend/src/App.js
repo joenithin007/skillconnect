@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -16,6 +17,10 @@ import MyRequests from './pages/MyRequests';
 import Achievements from './pages/Achievements';
 import Messages from './pages/Messages';
 import Friends from './pages/Friends';
+import Announcements from './pages/Announcements';
+import Search from './pages/Search';
+import Leaderboard from './pages/Leaderboard';
+import ResumeBuilder from './pages/ResumeBuilder';
 
 function PrivateRoute({ children, roles }) {
   const { user, loading } = useAuth();
@@ -41,16 +46,20 @@ function AppRoutes() {
       <Routes>
         <Route path="/login"    element={user ? <Navigate to="/dashboard" /> : <Login />} />
         <Route path="/register" element={user ? <Navigate to="/dashboard" /> : <Register />} />
-        <Route path="/dashboard"  element={<PrivateRoute><DashboardRouter /></PrivateRoute>} />
-        <Route path="/projects"   element={<PrivateRoute><Projects /></PrivateRoute>} />
-        <Route path="/projects/:id" element={<PrivateRoute><ProjectDetail /></PrivateRoute>} />
-        <Route path="/students"   element={<PrivateRoute roles={['staff','admin']}><Students /></PrivateRoute>} />
-        <Route path="/profile"    element={<PrivateRoute><Profile /></PrivateRoute>} />
-        <Route path="/notifications" element={<PrivateRoute><Notifications /></PrivateRoute>} />
-        <Route path="/requests"   element={<PrivateRoute><MyRequests /></PrivateRoute>} />
-        <Route path="/achievements" element={<PrivateRoute roles={['student']}><Achievements /></PrivateRoute>} />
-        <Route path="/messages"   element={<PrivateRoute><Messages /></PrivateRoute>} />
-        <Route path="/friends"    element={<PrivateRoute><Friends /></PrivateRoute>} />
+        <Route path="/dashboard"      element={<PrivateRoute><DashboardRouter /></PrivateRoute>} />
+        <Route path="/projects"       element={<PrivateRoute><Projects /></PrivateRoute>} />
+        <Route path="/projects/:id"   element={<PrivateRoute><ProjectDetail /></PrivateRoute>} />
+        <Route path="/students"       element={<PrivateRoute roles={['staff','admin']}><Students /></PrivateRoute>} />
+        <Route path="/profile"        element={<PrivateRoute><Profile /></PrivateRoute>} />
+        <Route path="/notifications"  element={<PrivateRoute><Notifications /></PrivateRoute>} />
+        <Route path="/requests"       element={<PrivateRoute><MyRequests /></PrivateRoute>} />
+        <Route path="/achievements"   element={<PrivateRoute roles={['student']}><Achievements /></PrivateRoute>} />
+        <Route path="/messages"       element={<PrivateRoute><Messages /></PrivateRoute>} />
+        <Route path="/friends"        element={<PrivateRoute><Friends /></PrivateRoute>} />
+        <Route path="/announcements"  element={<PrivateRoute><Announcements /></PrivateRoute>} />
+        <Route path="/search"         element={<PrivateRoute><Search /></PrivateRoute>} />
+        <Route path="/leaderboard"    element={<PrivateRoute><Leaderboard /></PrivateRoute>} />
+        <Route path="/resume"         element={<PrivateRoute roles={['student']}><ResumeBuilder /></PrivateRoute>} />
         <Route path="/" element={<Navigate to="/dashboard" />} />
       </Routes>
     </>
@@ -59,10 +68,12 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

@@ -40,8 +40,8 @@ router.post('/', protect, authorize('student'), async (req, res) => {
       user: project.faculty._id,
       title: 'New Join Request',
       message: `${req.user.name} applied to "${project.title}" (${skillMatchScore}% skill match)`,
-      type: 'request_received',
-      link: `/requests/${request._id}`
+      type: 'new_request',
+      link: `/projects/${project._id}`, relatedId: project._id.toString()
     });
 
     res.status(201).json({ ...request.toObject(), skillMatchScore });
@@ -116,7 +116,7 @@ router.put('/:id', protect, authorize('staff', 'admin'), async (req, res) => {
         ? `Your request for "${request.project.title}" was accepted! Welcome to the team.`
         : `Your request for "${request.project.title}" was not accepted. ${facultyNote || ''}`,
       type: status === 'accepted' ? 'request_accepted' : 'request_rejected',
-      link: `/projects/${request.project._id}`
+      link: `/projects/${request.project._id}`, relatedId: request.project._id.toString()
     });
 
     res.json(request);
@@ -126,3 +126,4 @@ router.put('/:id', protect, authorize('staff', 'admin'), async (req, res) => {
 });
 
 module.exports = router;
+// Email notification helper (appended)
